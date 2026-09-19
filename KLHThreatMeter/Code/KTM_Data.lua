@@ -354,9 +354,18 @@ me.threatconstants =
 	["healing"] = 0.5,
 	["meleeaggrogain"] = 1.1,
 	["rangeaggrogain"] = 1.3,
-	["ragegain"] = 5.0,
-	["energygain"] = 5.0,
-	["managain"] = 0.5,	
+
+	-- Project Legacy / VMaNGOS 1.12 resource-threat model.
+	-- Direct SPELL_EFFECT_ENERGIZE only modifies the resource and does not
+	-- call threatAssist in upstream VMaNGOS. Periodic Rage/Energy energize
+	-- does call threatAssist at 0.5 threat per actual point gained, while
+	-- periodic Mana explicitly produces no threat on the 1.12 code path.
+	["ragegain"] = 0.0,
+	["energygain"] = 0.0,
+	["managain"] = 0.0,
+	["periodicragegain"] = 0.5,
+	["periodicenergygain"] = 0.5,
+	["periodicmanagain"] = 0.0,	
 }
 
 --[[ 

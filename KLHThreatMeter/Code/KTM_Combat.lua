@@ -635,15 +635,37 @@ me.powergain = function(amount, powertype, spellid)
 	
 	-- 2) Prevent invalid power gains (Essence of the Red shows both rage and energy gain)
 	local playerpowertype = UnitPowerType("player")
+
+	-- Project Legacy / VMaNGOS 1.12:
+	--   CHAT_MSG_SPELL_SELF_BUFF              = direct Energize -> 0 threat
+	--   CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS    = periodic Energize
+	--       Mana                              -> 0 threat
+	--       Rage / Energy                     -> 0.5 threat per actual point
+	-- Natural regeneration is not reported through this parser and therefore
+	-- naturally remains zero threat. Keep this decision here instead of in the
+	-- parser so DPSMate's existing KTM powergain hook remains API-compatible.
+	local periodic = (event == "CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS")
 	
 	if powertype == mod.string.get("power", "rage") and playerpowertype == 1 then
-		me.event.threat = amount * mod.data.threatconstants.ragegain
+		if periodic then
+			me.event.threat = amount * mod.data.threatconstants.periodicragegain
+		else
+			me.event.threat = amount * mod.data.threatconstants.ragegain
+		end
 		
 	elseif powertype == mod.string.get("power", "energy") and playerpowertype == 3 then
-		me.event.threat = amount * mod.data.threatconstants.energygain
+		if periodic then
+			me.event.threat = amount * mod.data.threatconstants.periodicenergygain
+		else
+			me.event.threat = amount * mod.data.threatconstants.energygain
+		end
 		
 	elseif powertype == mod.string.get("power", "mana") and playerpowertype == 0 then
-		me.event.threat = amount * mod.data.threatconstants.managain 
+		if periodic then
+			me.event.threat = amount * mod.data.threatconstants.periodicmanagain
+		else
+			me.event.threat = amount * mod.data.threatconstants.managain
+		end
 		
 	else
 		return

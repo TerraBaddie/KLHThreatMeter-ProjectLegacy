@@ -1,3 +1,13 @@
+## PL3 - VMaNGOS resource threat model
+
+- Changes KTM resource-gain threat from the older retail-theory `Mana 0.5 / Rage 5 / Energy 5` constants to the behavior found in current upstream **VMaNGOS 1.12** source.
+- Natural Mana/Energy regeneration remains **0 threat** (it is not parsed as an energize event).
+- Direct/instant Energize gains are **0 threat** for Mana, Rage, and Energy.
+- Periodic Mana energize is **0 threat**.
+- Periodic Rage and Energy energize are **0.5 threat per actual point gained**.
+- The existing `powergain(amount, powertype, spellid)` API is unchanged so the Project Legacy DPSMate KTM hook remains compatible.
+- KTM already models VMaNGOS-style healing threat correctly: base healing threat is 0.5x effective healing, with KTM's Paladin healing multiplier reducing Paladin healing to 0.25x effective healing.
+
 
 ## PL2 - Holy school hardening
 
