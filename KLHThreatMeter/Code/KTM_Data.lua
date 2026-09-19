@@ -249,8 +249,23 @@ me.projectlegacy =
 {
 	holydamage =
 	{
+		-- Project Legacy-specific Holy attacks.
 		["crusaderstrike"] = true,
 		["crusadersinquest"] = true,
+
+		-- Vanilla/Project Legacy Paladin Holy damage. 1.12 combat-log forms can
+		-- omit the school for some of these, so classify by the spell name/id.
+		["sealofrighteousness"] = true,
+		["judgementofrighteousness"] = true,
+		["sealofcommand"] = true,
+		["judgementofcommand"] = true,
+		["consecration"] = true,
+		["holyshield"] = true,
+		["holyshock"] = true,
+		["exorcism"] = true,
+		["holywrath"] = true,
+		["hammerofwrath"] = true,
+		["eye for an eye"] = true,
 	},
 	taunts =
 	{
@@ -269,6 +284,28 @@ me.projectlegacyspellid = function(spellname)
 		return "crusaderstrike"
 	elseif spellname == "Crusader's Inquest" then
 		return "crusadersinquest"
+	elseif spellname == "Seal of Righteousness" then
+		return "sealofrighteousness"
+	elseif spellname == "Judgement of Righteousness" then
+		return "judgementofrighteousness"
+	elseif spellname == "Seal of Command" then
+		return "sealofcommand"
+	elseif spellname == "Judgement of Command" then
+		return "judgementofcommand"
+	elseif spellname == "Consecration" then
+		return "consecration"
+	elseif spellname == "Holy Shield" then
+		return "holyshield"
+	elseif spellname == "Holy Shock" then
+		return "holyshock"
+	elseif spellname == "Exorcism" then
+		return "exorcism"
+	elseif spellname == "Holy Wrath" then
+		return "holywrath"
+	elseif spellname == "Hammer of Wrath" then
+		return "hammerofwrath"
+	elseif spellname == "Eye for an Eye" then
+		return "eye for an eye"
 	elseif spellname == "Protector's Command" then
 		return "protectorscommand"
 	elseif spellname == "Mongoose Bite" then

@@ -1,3 +1,11 @@
+
+## PL2 - Holy school hardening
+
+- Extends the Project Legacy Holy fallback to normal Paladin Holy damage such as **Judgement of Righteousness**, Seal of Righteousness, Consecration, Holy Shield, Holy Shock, Exorcism, Holy Wrath, Hammer of Wrath, and Seal/Judgement of Command.
+- This does **not** add bonus threat to those spells. It only supplies the Holy school when an old 1.12 combat-log form omits it, allowing KTM's existing Holy-only Righteous Fury logic to run.
+- Crusader Strike and Crusader's Inquest remain plain Holy damage with no innate threat modifier.
+- No cast-to-white-hit Crusader Strike correlation is added yet; that requires confirming the exact Project Legacy combat-log sequence so a real autoattack cannot be misclassified.
+
 # KLHThreatMeter - Project Legacy
 
 Project Legacy compatibility fork based on **KLHThreatMeter 17.39.243**, the release immediately before the TurtleWoW threat API was added.
