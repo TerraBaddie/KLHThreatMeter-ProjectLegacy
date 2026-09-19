@@ -241,6 +241,61 @@ me.spells =
 	},
 }
 
+-- Project Legacy 1.12.1 compatibility helpers.
+-- These abilities do NOT have innate bonus threat here; this table only identifies
+-- server-specific spell families so the normal KTM threat engine can apply the
+-- appropriate school/talent modifiers.
+me.projectlegacy =
+{
+	holydamage =
+	{
+		["crusaderstrike"] = true,
+		["crusadersinquest"] = true,
+	},
+	taunts =
+	{
+		["protectorscommand"] = true,
+	},
+	shocks =
+	{
+		["earthshock"] = true,
+		["flameshock"] = true,
+		["frostshock"] = true,
+	},
+}
+
+me.projectlegacyspellid = function(spellname)
+	if spellname == "Crusader Strike" then
+		return "crusaderstrike"
+	elseif spellname == "Crusader's Inquest" then
+		return "crusadersinquest"
+	elseif spellname == "Protector's Command" then
+		return "protectorscommand"
+	elseif spellname == "Mongoose Bite" then
+		return "mongoosebite"
+	elseif spellname == "Carve" then
+		return "carve"
+	elseif spellname == "Envenom" then
+		return "envenom"
+	elseif spellname == "Flame Shock" then
+		return "flameshock"
+	elseif spellname == "Frost Shock" then
+		return "frostshock"
+	end
+end
+
+me.isprojectlegacyshock = function(spellid, spellname)
+	if spellid and me.projectlegacy.shocks[spellid] then
+		return true
+	end
+
+	if spellname == "Earth Shock" or spellname == "Flame Shock" or spellname == "Frost Shock" then
+		return true
+	end
+
+	return false
+end
+
 -- These are the DPS modifiers for ranks of rockbiter. Whenever a hit lands with a rockbiter weapon, the added threat
 -- equals the speed of the weapon times the rockbiter value, e.g. 72 dps for max rank.
 --! This variable is referenced by these modules: combat, my, 
@@ -365,6 +420,7 @@ me.talentinfo =
 	burningsoul = {2, 9, "mage"},
 	righteousfury = {2, 7, "paladin"},
 	healinggrace = {3, 9, "shaman"},
+	reverberation = {1, 7, "shaman"}, -- Project Legacy: Shock threat reduction
 	sleightofhand = {3, 3, "rogue"},
 }
 

@@ -1,11 +1,11 @@
-## Interface: 11200
-## Title: KLHThreatMeter |cff1fff1fLaYt|r edition
+﻿## Interface: 11200
+## Title: KLHThreatMeter |cff1fff1fProject Legacy|r
 ## Author: Kenco@Perenolde, edited by Plask, eduted by LaYt
-## Notes: A Threat Meter with sunders counter
+## Notes: Project Legacy 1.12.1-client threat meter fork based on KLHThreatMeter 17.39.243 with sunders counter
 ## Notes-ruRU: Измеритель угрозы
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## Version: 17.39.243
+## Version: 17.39.243-PL1
 ## SavedVariablesPerCharacter: KLHTM_SavedVariables
 Code\KTM_Core.lua
 Code\Localisation\KTM_Localisation.lua

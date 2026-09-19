@@ -66,6 +66,17 @@ klhtm.string.data["enUS"] =
 		["tranquility"] = "Tranquility",
 		["distractingshot"] = "Distracting Shot",
 		["earthshock"] = "Earth Shock",
+		["flameshock"] = "Flame Shock",
+		["frostshock"] = "Frost Shock",
+
+		-- Project Legacy custom abilities
+		["crusaderstrike"] = "Crusader Strike",
+		["crusadersinquest"] = "Crusader's Inquest",
+		["protectorscommand"] = "Protector's Command",
+		["mongoosebite"] = "Mongoose Bite",
+		["carve"] = "Carve",
+		["envenom"] = "Envenom",
+
 		["rockbiter"] = "Rockbiter",
 		["fade"] = "Fade",
 		["thunderfury"] = "Thunderfury",

@@ -254,6 +254,21 @@ me.parserstagethree =
 		-- 1) Check for special abilities
 		if me.action.spellid == "" then
 			me.action.spellid = mod.string.unlocalise("spell", me.action.spellname)
+			if me.action.spellid == nil then
+				me.action.spellid = mod.data.projectlegacyspellid(me.action.spellname)
+			end
+		end
+
+		-- Project Legacy Crusader Strike and Crusader's Inquest are Holy damage.
+		-- Some 1.12 combat-log forms omit the school, so supply it only when missing.
+		if mod.my.class == "paladin" then
+			local plspellid = me.action.spellid
+			if me.action.spellid == "dot" then
+				plspellid = mod.data.projectlegacyspellid(me.action.spellname)
+			end
+			if plspellid and mod.data.projectlegacy.holydamage[plspellid] and ((me.action.spellschool == nil) or (me.action.spellschool == "")) then
+				me.action.spellschool = SPELL_SCHOOL1_CAP
+			end
 		end
 		
 		if me.action.spellid and mod.data.spells[me.action.spellid] then
@@ -296,9 +311,14 @@ me.parserstagethree =
 		
 		-- 1) Unlocalise the ability. e.g. "Heroic Strike" -> "heroicstrike", "Heldenhafter Sto\195\159" -> "heroicstrike"
 		me.action.spellid = mod.string.unlocalise("spell", me.action.spellname)
+		if me.action.spellid == nil then
+			me.action.spellid = mod.data.projectlegacyspellid(me.action.spellname)
+		end
 		
-		-- 2) Taunt / Growl
+		-- 2) Taunt / Growl / Project Legacy Protector's Command
 		if (me.action.spellid == "taunt") or (me.action.spellid == "growl") then
+			mod.combat.taunt(me.action.target)
+		elseif me.action.spellid and mod.data.projectlegacy.taunts[me.action.spellid] then
 			mod.combat.taunt(me.action.target)
 			
 		-- 3) Special Abilities
