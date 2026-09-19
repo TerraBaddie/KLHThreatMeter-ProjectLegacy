@@ -3,6 +3,8 @@ local mod = klhtm
 local me = {}
 local petthreat
 local petincombat = false
+local lastpetname = nil
+local lastpetlevel = nil
 mod.pet = me
 
 --[[
@@ -34,17 +36,41 @@ me.lclass, me.class = UnitClass("player")
 onupdate() function, called from Core.lua
 ]]
 me.onupdate = function()
+	-- Cache the pet identity while the 1.12 client still exposes the unit token.
+	-- On player death the pet can remain in the world and keep attacking while
+	-- UnitName("pet") temporarily becomes nil. Never use that nil as a table key.
+	local currentpetname = UnitName("pet")
+	local currentpetlevel = UnitLevel("pet")
+	if currentpetname and currentpetname ~= "" then
+		lastpetname = currentpetname
+	end
+	if currentpetlevel and currentpetlevel > 0 then
+		lastpetlevel = currentpetlevel
+	end
+
 	-- update combat state
 	if UnitAffectingCombat("pet") then
-    if petincombat == false then
-    	petincombat = true
-		end 
+		if petincombat == false then
+			petincombat = true
+		end
 	else
-    if petincombat == true then
-    	petincombat = false
-    	mod.table.raiddata[UnitName("pet")] = nil
-    	KLHTM_RequestRedraw("raid")
-		end 
+		if petincombat == true then
+			-- If the player is dead and the pet token vanished, keep the cached pet
+			-- active. Its combat-log messages can continue after the owner's death.
+			if not currentpetname and UnitIsDeadOrGhost("player") then
+				return
+			end
+
+			petincombat = false
+			if lastpetname then
+				mod.table.raiddata[lastpetname] = nil
+				if mod.table.raidupdatetimes then
+					mod.table.raidupdatetimes[lastpetname] = nil
+				end
+			end
+			petthreat = 0
+			KLHTM_RequestRedraw("raid")
+		end
 	end
 end
 
@@ -63,7 +89,14 @@ me.onevent = function()
 		return
 	end
 	
-	if output.final[1] ~= UnitName("pet") then
+	local petname = UnitName("pet")
+	if petname and petname ~= "" then
+		lastpetname = petname
+	else
+		petname = lastpetname
+	end
+
+	if not petname or output.final[1] ~= petname then
 		return
 	end
 
@@ -94,13 +127,25 @@ end
 
 -- show pet threat value in raid display
 me.addpetthreat = function(value)
---	if not value then prin("no pet threat value to add"); return; end
-	if mod.table.raiddata[UnitName("pet")] == nil then
+	if not value then return end
+
+	local petname = UnitName("pet")
+	if petname and petname ~= "" then
+		lastpetname = petname
+	else
+		petname = lastpetname
+	end
+
+	-- The pet unit token can disappear during owner death/despawn transitions.
+	-- Without a cached valid name there is nothing safe to index or display.
+	if not petname then return end
+
+	if mod.table.raiddata[petname] == nil then
 		petthreat = 0
 	end
 
-	petthreat = petthreat + value
-	mod.table.updateplayerthreat(UnitName("pet"), petthreat)
+	petthreat = (petthreat or 0) + value
+	mod.table.updateplayerthreat(petname, petthreat)
 	KLHTM_RequestRedraw("raid")
 	return
 end
@@ -151,10 +196,19 @@ end
 me.getthreatvalue = function(spellname)
 	spellname = me.getenglishspell(spellname)
 	if not spellaggrolevel[spellname] then prin("key not found in spelldata "..spellname); return 0; end
+	local petlevel = UnitLevel("pet")
+	if petlevel and petlevel > 0 then
+		lastpetlevel = petlevel
+	else
+		petlevel = lastpetlevel
+	end
+	if not petlevel then return 0 end
+
 	local i = 1
-	while UnitLevel('pet') < spellaggrolevel[spellname][i] do
+	while spellaggrolevel[spellname][i] and petlevel < spellaggrolevel[spellname][i] do
 		i = i + 1
 	end
+	if not spellaggrolevel[spellname][i] then return 0 end
 	return spellaggro(spellname, i)
 end
 

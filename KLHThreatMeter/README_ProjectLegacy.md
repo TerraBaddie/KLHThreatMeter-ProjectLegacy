@@ -1,3 +1,11 @@
+## PL4 - Pet death/token safety
+
+- Fixes `KTM_PetMod.lua:45: table index is nil` when the player dies while a Hunter/Warlock pet remains active.
+- Caches the last valid pet name and level so 1.12 client transitions where `UnitName("pet")` / `UnitLevel("pet")` temporarily return nil cannot be used as table keys or numeric values.
+- If the owner is dead and the pet unit token disappears while the pet is still fighting, KTM keeps the cached pet identity and can continue accepting that pet's combat-log damage instead of immediately dropping it.
+- Safely clears the cached pet threat entry once the normal pet unit/combat state becomes available again.
+
+
 ## PL3 - VMaNGOS resource threat model
 
 - Changes KTM resource-gain threat from the older retail-theory `Mana 0.5 / Rage 5 / Energy 5` constants to the behavior found in current upstream **VMaNGOS 1.12** source.
